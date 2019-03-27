@@ -45,14 +45,23 @@ public class PropertyParser {
 
   private static final String ENABLE_DEFAULT_VALUE = "false";
   private static final String DEFAULT_VALUE_SEPARATOR = ":";
-
+   //私有构造函数，防止创建对象，本类就用于提供工具类
   private PropertyParser() {
     // Prevent Instantiation
   }
 
+  /**
+   * 动态替换掉${}内的值
+   * @param string
+   * @param variables
+   * @return
+   */
   public static String parse(String string, Properties variables) {
+    // 2.1. 创建VariableTokenHandler 对象
     VariableTokenHandler handler = new VariableTokenHandler(variables);
+    // 2.2  自定义的解释器实现类，有点像策略模式
     GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
+    // 2.3 解释器执行结果
     return parser.parse(string);
   }
 
@@ -71,11 +80,18 @@ public class PropertyParser {
       return (variables == null) ? defaultValue : variables.getProperty(key, defaultValue);
     }
 
+    /**
+     * 从variables 中根据content 作为key，获取对应value
+     * @param content
+     * @return
+     */
     @Override
     public String handleToken(String content) {
       if (variables != null) {
         String key = content;
+        // 开启默认值功能
         if (enableDefaultValue) {
+          // 查找默认替换值
           final int separatorIndex = content.indexOf(defaultValueSeparator);
           String defaultValue = null;
           if (separatorIndex >= 0) {
