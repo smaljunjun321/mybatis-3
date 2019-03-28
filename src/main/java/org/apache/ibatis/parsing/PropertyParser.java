@@ -32,6 +32,7 @@ public class PropertyParser {
    * </p>
    * @since 3.4.2
    */
+  // org.apache.ibatis.parsing.PropertyParser.enable-default-value" 配置 property 可以开启默认值功能
   public static final String KEY_ENABLE_DEFAULT_VALUE = KEY_PREFIX + "enable-default-value";
 
   /**
@@ -41,6 +42,7 @@ public class PropertyParser {
    * </p>
    * @since 3.4.2
    */
+  //例如 ${username:tom} 假如没有值可以直接使用tom作为默认值
   public static final String KEY_DEFAULT_VALUE_SEPARATOR = KEY_PREFIX + "default-value-separator";
 
   private static final String ENABLE_DEFAULT_VALUE = "false";

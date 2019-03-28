@@ -28,12 +28,17 @@ import org.apache.ibatis.binding.MapperMethod.ParamMap;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
-
+// 参数名称解析器
 public class ParamNameResolver {
 
   private static final String GENERIC_NAME_PREFIX = "param";
 
   /**
+   *
+   * 参数名映射
+   *   key:参数顺寻
+   *   value: 参数名
+   *
    * <p>
    * The key is the index and the value is the name of the parameter.<br />
    * The name is obtained from {@link Param} if specified. When {@link Param} is not specified,
@@ -48,8 +53,16 @@ public class ParamNameResolver {
    */
   private final SortedMap<Integer, String> names;
 
+  /**
+   * 是否有@Param注解
+   */
   private boolean hasParamAnnotation;
 
+  /**
+   * 解析参数名称
+   * @param config
+   * @param method
+   */
   public ParamNameResolver(Configuration config, Method method) {
     final Class<?>[] paramTypes = method.getParameterTypes();
     final Annotation[][] paramAnnotations = method.getParameterAnnotations();
@@ -62,6 +75,7 @@ public class ParamNameResolver {
         continue;
       }
       String name = null;
+      // 1. 首先从@Param注解中获取到参数
       for (Annotation annotation : paramAnnotations[paramIndex]) {
         if (annotation instanceof Param) {
           hasParamAnnotation = true;
@@ -69,19 +83,24 @@ public class ParamNameResolver {
           break;
         }
       }
+      //
       if (name == null) {
-        // @Param was not specified.
+        // @Param was not specified. 2.其次从方法中获取到真实的参数名称
         if (config.isUseActualParamName()) {
           name = getActualParamName(method, paramIndex);
         }
+        // 最差，使用map的顺序，作为编号
         if (name == null) {
           // use the parameter index as the name ("0", "1", ...)
           // gcode issue #71
           name = String.valueOf(map.size());
         }
       }
+      //添加到map中
       map.put(paramIndex, name);
     }
+
+    // 构建不可变集合
     names = Collections.unmodifiableSortedMap(map);
   }
 
@@ -110,6 +129,7 @@ public class ParamNameResolver {
    * In addition to the default names, this method also adds the generic names (param1, param2,
    * ...).
    * </p>
+   *   获取参数中名称与值的对应关系
    */
   public Object getNamedParams(Object[] args) {
     final int paramCount = names.size();

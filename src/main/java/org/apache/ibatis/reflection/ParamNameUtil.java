@@ -27,17 +27,29 @@ import org.apache.ibatis.lang.UsesJava8;
 
 @UsesJava8
 public class ParamNameUtil {
+  /**
+   * 获取普通方法的的参数列表
+   * @param method
+   * @return
+   */
   public static List<String> getParamNames(Method method) {
     return getParameterNames(method);
   }
 
+  /**
+   * 获得构造函数的参数列表
+   * @param constructor
+   * @return
+   */
   public static List<String> getParamNames(Constructor<?> constructor) {
     return getParameterNames(constructor);
   }
 
   private static List<String> getParameterNames(Executable executable) {
     final List<String> names = new ArrayList<String>();
+    //获得参数数据
     final Parameter[] params = executable.getParameters();
+    // 放到list中去
     for (Parameter param : params) {
       names.add(param.getName());
     }
