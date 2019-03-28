@@ -25,6 +25,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
 /**
+ * 实现了DatSource接口，非池化的DataSourceFactory 工厂类
  * @author Clinton Begin
  */
 public class UnpooledDataSourceFactory implements DataSourceFactory {
@@ -33,7 +34,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
   private static final int DRIVER_PROPERTY_PREFIX_LENGTH = DRIVER_PROPERTY_PREFIX.length();
 
   protected DataSource dataSource;
-
+  // 创建非池化的DataSource对象
   public UnpooledDataSourceFactory() {
     this.dataSource = new UnpooledDataSource();
   }
@@ -41,12 +42,15 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
   @Override
   public void setProperties(Properties properties) {
     Properties driverProperties = new Properties();
+    // 创建Datasource对应的MetaSource对象
     MetaObject metaDataSource = SystemMetaObject.forObject(dataSource);
     for (Object key : properties.keySet()) {
       String propertyName = (String) key;
+      // 以driver 开头的设置到driverProperties中去
       if (propertyName.startsWith(DRIVER_PROPERTY_PREFIX)) {
         String value = properties.getProperty(propertyName);
         driverProperties.setProperty(propertyName.substring(DRIVER_PROPERTY_PREFIX_LENGTH), value);
+        // 初始化到DriverProperties
       } else if (metaDataSource.hasSetter(propertyName)) {
         String value = (String) properties.get(propertyName);
         Object convertedValue = convertValue(metaDataSource, propertyName, value);
@@ -64,10 +68,12 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
   public DataSource getDataSource() {
     return dataSource;
   }
-
+  //
   private Object convertValue(MetaObject metaDataSource, String propertyName, String value) {
     Object convertedValue = value;
+    // 获得属性的setting方法的参数类型
     Class<?> targetType = metaDataSource.getSetterType(propertyName);
+    // 转化
     if (targetType == Integer.class || targetType == int.class) {
       convertedValue = Integer.valueOf(value);
     } else if (targetType == Long.class || targetType == long.class) {
@@ -75,6 +81,7 @@ public class UnpooledDataSourceFactory implements DataSourceFactory {
     } else if (targetType == Boolean.class || targetType == boolean.class) {
       convertedValue = Boolean.valueOf(value);
     }
+    // 返回
     return convertedValue;
   }
 

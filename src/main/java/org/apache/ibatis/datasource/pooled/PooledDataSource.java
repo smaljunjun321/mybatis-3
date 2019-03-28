@@ -46,13 +46,15 @@ public class PooledDataSource implements DataSource {
   private final UnpooledDataSource dataSource;
 
   // OPTIONAL CONFIGURATION FIELDS
+  // 在任意时间可以存在的活动(也就是正在使用的连接)
   protected int poolMaximumActiveConnections = 10;
   protected int poolMaximumIdleConnections = 5;
   protected int poolMaximumCheckoutTime = 20000;
   protected int poolTimeToWait = 20000;
   protected int poolMaximumLocalBadConnectionTolerance = 3;
-  protected String poolPingQuery = "NO PING QUERY SET";
-  protected boolean poolPingEnabled;
+  protected String poolPingQuery = "NO PING QUERY SET"; // 需要一个查询非常快的SQL
+  protected boolean poolPingEnabled;// 是否启用侦察查询。若开启，则需要设置poolPingQuery 属性作为一个可执行的SQL
+  // 配置 poolPingQuery 的频率 可以被设置为和数据库连接超时时间一样，来避免不必要的侦测，默认值：0（即所有连接每一时刻都被侦测 — 当然仅当 poolPingEnabled 为 true 时适用）
   protected int poolPingConnectionsNotUsedFor;
 
   private int expectedConnectionTypeCode;

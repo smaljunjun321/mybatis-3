@@ -32,6 +32,7 @@ import javax.sql.DataSource;
 import org.apache.ibatis.io.Resources;
 
 /**
+ *  非池化的DataSource
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
