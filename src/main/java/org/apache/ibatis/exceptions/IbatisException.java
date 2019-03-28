@@ -16,6 +16,7 @@
 package org.apache.ibatis.exceptions;
 
 /**
+ * mybatis 异常的基类 ，目前已经被废弃
  * @author Clinton Begin
  */
 @Deprecated
