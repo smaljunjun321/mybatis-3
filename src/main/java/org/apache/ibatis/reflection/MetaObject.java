@@ -28,6 +28,7 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapper;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
+ *  对元数据进行一些骚操作，具体是设置对象属性，属性值获取等
  * @author Clinton Begin
  */
 public class MetaObject {

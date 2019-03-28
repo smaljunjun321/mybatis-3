@@ -68,6 +68,7 @@ public class MetaClass {
     return reflector.getSetablePropertyNames();
   }
 
+  //获取指定属性的setting方法返回值的类型
   public Class<?> getSetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -77,7 +78,7 @@ public class MetaClass {
       return reflector.getSetterType(prop.getName());
     }
   }
-
+  //获取指定属性的getting方法返回值的类型
   public Class<?> getGetterType(String name) {
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
@@ -95,6 +96,7 @@ public class MetaClass {
 
   private Class<?> getGetterType(PropertyTokenizer prop) {
     Class<?> type = reflector.getGetterType(prop.getName());
+    // type 是一个数组类型
     if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
       Type returnType = getGenericGetterType(prop.getName());
       if (returnType instanceof ParameterizedType) {
@@ -111,7 +113,7 @@ public class MetaClass {
     }
     return type;
   }
-
+  // generic 通用的
   private Type getGenericGetterType(String propertyName) {
     try {
       Invoker invoker = reflector.getGetInvoker(propertyName);

@@ -41,7 +41,7 @@ import org.apache.ibatis.reflection.property.PropertyNamer;
 /**
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
- *
+ *  这个类会缓存反射操作所需要的类的信息，很容易映射属性的名称 ，获取值
  * @author Clinton Begin
  */
 public class Reflector {
@@ -59,9 +59,13 @@ public class Reflector {
 
   public Reflector(Class<?> clazz) {
     type = clazz;
+    // 1. 初始化默认的构造器
     addDefaultConstructor(clazz);
+    //2. 初始化get方法
     addGetMethods(clazz);
+    //3. 初始化set方法
     addSetMethods(clazz);
+    //4. 初始化字段
     addFields(clazz);
     readablePropertyNames = getMethods.keySet().toArray(new String[getMethods.keySet().size()]);
     writeablePropertyNames = setMethods.keySet().toArray(new String[setMethods.keySet().size()]);
@@ -102,6 +106,7 @@ public class Reflector {
       if ((name.startsWith("get") && name.length() > 3)
           || (name.startsWith("is") && name.length() > 2)) {
         name = PropertyNamer.methodToProperty(name);
+        // 添加getter方法，可能存在重复，因为cls 反射时也会获取到父类的数据
         addMethodConflict(conflictingGetters, name, method);
       }
     }
@@ -311,7 +316,9 @@ public class Reflector {
    * @return An array containing all methods in this class
    */
   private Method[] getClassMethods(Class<?> cls) {
+    // 1.每个方法签名与该方法的映射
     Map<String, Method> uniqueMethods = new HashMap<String, Method>();
+    // 2.循环类，类的父类，类的父类的父类，直到父类为Object
     Class<?> currentClass = cls;
     while (currentClass != null && currentClass != Object.class) {
       addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
