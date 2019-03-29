@@ -38,6 +38,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.reflection.Jdk;
 
 /**
+ * 类型转换器的注册中心
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */

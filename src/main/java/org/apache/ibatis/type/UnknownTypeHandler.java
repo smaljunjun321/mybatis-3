@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.ibatis.io.Resources;
 
 /**
+ * 未知的TypeHandle实现类
  * @author Clinton Begin
  */
 public class UnknownTypeHandler extends BaseTypeHandler<Object> {

@@ -108,9 +108,11 @@ public class TypeAliasRegistry {
         return null;
       }
       // issue #748
+      // 转成小写
       String key = string.toLowerCase(Locale.ENGLISH);
       Class<T> value;
       if (TYPE_ALIASES.containsKey(key)) {
+        //
         value = (Class<T>) TYPE_ALIASES.get(key);
       } else {
         value = (Class<T>) Resources.classForName(string);
@@ -126,13 +128,17 @@ public class TypeAliasRegistry {
   }
 
   public void registerAliases(String packageName, Class<?> superType){
+    // 获得指定包下的类目
     ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
+    // 查找父类是superType
     resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
     Set<Class<? extends Class<?>>> typeSet = resolverUtil.getClasses();
     for(Class<?> type : typeSet){
       // Ignore inner classes and interfaces (including package-info.java)
       // Skip also inner classes. See issue #6
-      if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
+      if (!type.isAnonymousClass() && // 排除掉匿名类
+              !type.isInterface() && // 排除掉接口
+              !type.isMemberClass()) {// 排除掉内部类
         registerAlias(type);
       }
     }
@@ -153,6 +159,7 @@ public class TypeAliasRegistry {
     }
     // issue #748
     String key = alias.toLowerCase(Locale.ENGLISH);
+    // <2> 假如已经被注册了，且类型不一致的情况下，则抛出异常
     if (TYPE_ALIASES.containsKey(key) && TYPE_ALIASES.get(key) != null && !TYPE_ALIASES.get(key).equals(value)) {
       throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + TYPE_ALIASES.get(key).getName() + "'.");
     }

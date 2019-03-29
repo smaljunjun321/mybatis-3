@@ -41,6 +41,7 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
 
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
+    // 将枚举类型转换成Int类型
     ps.setInt(i, parameter.ordinal());
   }
 
@@ -51,6 +52,7 @@ public class EnumOrdinalTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E
       return null;
     } else {
       try {
+        //将int类型转换成枚举类型
         return enums[i];
       } catch (Exception ex) {
         throw new IllegalArgumentException("Cannot convert " + i + " to " + type.getSimpleName() + " by ordinal value.", ex);
