@@ -41,6 +41,7 @@ public class JdbcTransaction implements Transaction {
 
   protected Connection connection;
   protected DataSource dataSource;
+  // 事务级别
   protected TransactionIsolationLevel level;
   // MEMO: We are aware of the typo. See #941
   protected boolean autoCommmit;
